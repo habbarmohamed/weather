@@ -71,6 +71,12 @@ defineProps({
                     src="/images/icons/overcast.png"
                     style="width: 15%;"
                     class="card-img" alt="snowy weather" />
+
+                  <img v-else-if="weatherData.weather[0].description == 'broken clouds'" 
+                    src="/images/icons/broken_clouds.png"
+                    style="width: 15%;"
+                    class="card-img" alt="snowy weather" />
+                  
                 </div>
 
 
@@ -106,6 +112,10 @@ defineProps({
                   src="/images/mist.jpg"
                   style="filter: contrast(0.8); height: 30em;"
                   class="card-img" alt="mist weather" />
+                <img v-else-if="weatherData.weather[0].description == 'broken clouds'" 
+                  src="/images/broken_clouds.jpg"
+                  style="filter: contrast(0.8); height: 30em;"
+                  class="card-img" alt="mist weather" />
                 
                 <div class="mask" style="background-color: rgba(190, 216, 232, .5);"></div>
               </div>
@@ -132,27 +142,31 @@ defineProps({
                                 src="/images/icons/overcast.png"
                                 style="width: 75%;"
                                 class="card-img" alt="snowy weather" /> -->
-                              <img v-if="weatherData.weather[0].main == 'Snow'" 
+                              <img v-if="row.weather[0].main == 'Snow'" 
                                 src="/images/icons/snow.png"
                                 style="width: 75%;"
                                 class="card-img" alt="snowy weather" />
 
-                              <img v-else-if="weatherData.weather[0].description == 'clear sky'" 
+                              <img v-else-if="row.weather[0].description == 'clear sky'" 
                                 src="/images/icons/clear.png"
                                 style="width: 75%;"
                                 class="card-img" alt="snowy weather" />
 
-                              <img v-else-if="weatherData.weather[0].main == 'Rain'" 
+                              <img v-else-if="row.weather[0].main == 'Rain'" 
                                 src="/images/icons/rain.png"
                                 style="width: 75%;"
                                 class="card-img" alt="snowy weather" />
 
-                              <img v-else-if="weatherData.weather[0].description == 'overcast clouds'" 
+                              <img v-else-if="row.weather[0].description == 'overcast clouds'" 
                                 src="/images/icons/overcast.png"
                                 style="width: 75%;"
                                 class="card-img" alt="snowy weather" />
-                              <img v-else-if="weatherData.weather[0].description == 'few clouds'" 
+                              <img v-else-if="row.weather[0].description == 'few clouds'" 
                                 src="/images/icons/cloud.png"
+                                style="width: 75%;"
+                                class="card-img" alt="snowy weather" />
+                              <img v-else-if="row.weather[0].description == 'broken clouds' || row.weather[0].description == 'scattered clouds'" 
+                                src="/images/icons/broken_clouds.png"
                                 style="width: 75%;"
                                 class="card-img" alt="snowy weather" />
                               <p class="mb-0"><strong>Mon</strong></p>

@@ -80,6 +80,51 @@ defineProps({
                 </div>
 
 
+                <!-- forecast 5days -->
+                <div id="demo3" class="carousel slide" data-ride="carousel">
+                        <!-- Carousel inner -->
+                        <div class="carousel-inner">
+                          <div class="carousel-item active">
+                            <div class="d-flex justify-content-around text-center mb-4 pb-3 pt-2">
+                              <div class="flex-column" v-for="(row, i) in unique.slice(1,6)" :key="i">
+                                <p class="small"><strong>{{ Math.round(parseFloat(row.main.temp)-273.15) }}°C</strong></p>
+                                <!-- <img 
+                                  src="/images/icons/overcast.png"
+                                  style="width: 75%;"
+                                  class="card-img" alt="snowy weather" /> -->
+                                <img v-if="row.weather[0].main == 'Snow'" 
+                                  src="/images/icons/snow.png"
+                                  style="width: 75%;"
+                                  class="card-img" alt="snowy weather" />
+
+                                <img v-else-if="row.weather[0].description == 'clear sky'" 
+                                  src="/images/icons/clear.png"
+                                  style="width: 75%;"
+                                  class="card-img" alt="snowy weather" />
+
+                                <img v-else-if="row.weather[0].main == 'Rain'" 
+                                  src="/images/icons/rain.png"
+                                  style="width: 75%;"
+                                  class="card-img" alt="snowy weather" />
+
+                                <img v-else-if="row.weather[0].description == 'overcast clouds'" 
+                                  src="/images/icons/overcast.png"
+                                  style="width: 75%;"
+                                  class="card-img" alt="snowy weather" />
+                                <img v-else-if="row.weather[0].description == 'few clouds'" 
+                                  src="/images/icons/cloud.png"
+                                  style="width: 75%;"
+                                  class="card-img" alt="snowy weather" />
+                                <img v-else-if="row.weather[0].description == 'broken clouds' || row.weather[0].description == 'scattered clouds'" 
+                                  src="/images/icons/broken_clouds.png"
+                                  style="width: 75%;"
+                                  class="card-img" alt="snowy weather" />
+                                <p class="mb-0"><strong>{{ getName(row.dt_txt) }}</strong></p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
               </div>
             </div>
@@ -127,7 +172,7 @@ defineProps({
 
 
 
-                <!-- forecast 5 days  -->
+                <!-- forecast hours  -->
               <div class="card" style="border-radius: 5px;background-color: #ffffff54;border: 0;">
                 <div class="card-body p-2">
 
@@ -169,7 +214,7 @@ defineProps({
                                 src="/images/icons/broken_clouds.png"
                                 style="width: 75%;"
                                 class="card-img" alt="snowy weather" />
-                              <p class="mb-0"><strong>Mon</strong></p>
+                              <p class="mb-0"><strong>{{getTime(row.dt_txt)}}</strong></p>
                             </div>
                           </div>
                         </div>
@@ -225,7 +270,9 @@ export default {
         weatherDataToday: null,
         weatherDataFiveDays: null,
 
-        temp: null
+        temp: null,
+
+        unique: null
   
         
       }
@@ -269,6 +316,19 @@ export default {
           const response = await axios.get(`${apiUrlFiveDays}&q=${city}`);
           this.weatherDataFiveDays = response.data;
           let today = new Date().toJSON().slice(0,10).replace(/-/g,'-');
+
+
+          this.unique = this.weatherDataFiveDays.list.reduce((acc, curr) => {
+          if (acc.length === 0) {
+              acc.push(curr)
+          } else {
+                  const found = acc.find(e => e.dt_txt.slice(0, 10) === curr.dt_txt.slice(0, 10))
+                  if (!found) {
+                      acc.push(curr)
+                  }
+              }
+              return acc
+          }, [])
           // console.log(today);
           // this.weatherDataToday = this.weatherDataFiveDays.list.filter(e => () {
           //   var date_today = e.dt_txt
@@ -277,7 +337,22 @@ export default {
         } catch (error) {
           console.error(error);
         }
-      } 
+      } ,
+
+      getDate(datetime) {
+        let date = new Date(datetime).toJSON().slice(0,10).replace(/-/g,'/')
+        return date
+      },
+
+      getName(datetime) {
+        let date = new Date(datetime).toLocaleString('en-us', {weekday:'long'})
+        return date
+      },
+
+      getTime(datetime) {
+        let time = new Date(datetime).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+        return time 
+      },
 
 
    
